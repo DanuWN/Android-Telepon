@@ -2,11 +2,7 @@ package com.example.telepon_ahmaddanu
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,13 +19,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-            val btnAddData: Button = findViewById(R.id.btnAddData)
-            btnAddData.setOnClickListener {
-                startActivity(Intent(this, CariNomor::class.java))
-            }
-                val btnViewData: Button = findViewById(R.id.btnViewData)
-                btnViewData.setOnClickListener {
-                    startActivity(Intent(this, BukuTelepon::class.java))
-            }
+        val btnAddData: Button = findViewById(R.id.btnAddData)
+        btnAddData.setOnClickListener {
+            startActivity(Intent(this, BukuTelepon::class.java))
+        }
+
+        val btnViewData: Button = findViewById(R.id.btnViewData)
+        btnViewData.setOnClickListener {
+            startActivity(Intent(this, CariNomor::class.java))
         }
     }
+}

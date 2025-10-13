@@ -22,7 +22,6 @@ class WordAdapter {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_word, parent, false)
             val word = getItem(position)
-
             val tvWord = view.findViewById<TextView>(R.id.tvWord)
             val cbSelect = view.findViewById<CheckBox>(R.id.cbSelect)
 

@@ -6,13 +6,14 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class CariNomor : AppCompatActivity() {
-    private lateinit var wordAdapter: WordAdapter
-    private val wordList = mutableListOf<WordAdapter.Word>()
+    private lateinit var contactAdapter: ContactAdapter
+    private val contactList = mutableListOf<Contact>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,47 +32,77 @@ class CariNomor : AppCompatActivity() {
         val dbHelper = DatabaseHelper(this)
 
         // Initialize ListView adapter
-        wordAdapter = WordAdapter(this, wordList)
-        lvHasil.adapter = wordAdapter
+        contactAdapter = ContactAdapter(this, contactList)
+        lvHasil.adapter = contactAdapter
 
-        // Load all words initially
-        updateWordList(dbHelper, "")
+        // Load all contacts initially
+        updateContactList(dbHelper, "")
 
         btnCari.setOnClickListener {
             val keyword = etKata.text.toString().trim()
-            updateWordList(dbHelper, keyword)
+            updateContactList(dbHelper, keyword)
         }
 
         btnDeleteSelected.setOnClickListener {
-            val selectedIds = wordList.filter { it.isSelected }.map { it.id }
+            val selectedIds = contactList.filter { it.isSelected }.map { it.id }
             if (selectedIds.isEmpty()) {
-                Toast.makeText(this, "Pilih kata untuk dihapus", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Pilih kontak untuk dihapus!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val rowsDeleted = dbHelper.deleteMultipleKata(selectedIds)
-            if (rowsDeleted > 0) {
-                Toast.makeText(this, "$rowsDeleted kata dihapus", Toast.LENGTH_SHORT).show()
-                updateWordList(dbHelper, etKata.text.toString().trim())
-            } else {
-                Toast.makeText(this, "Gagal menghapus kata", Toast.LENGTH_SHORT).show()
-            }
+            AlertDialog.Builder(this)
+                .setTitle("Hapus Kontak")
+                .setMessage("Yakin ingin menghapus ${selectedIds.size} kontak?")
+                .setPositiveButton("Ya") { _, _ ->
+                    val rowsDeleted = dbHelper.deleteMultipleContact(selectedIds)
+                    if (rowsDeleted > 0) {
+                        Toast.makeText(this, "$rowsDeleted kontak dihapus", Toast.LENGTH_SHORT).show()
+                        updateContactList(dbHelper, etKata.text.toString().trim())
+                    } else {
+                        Toast.makeText(this, "Gagal menghapus kontak!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .setNegativeButton("Tidak", null)
+                .show()
+        }
+
+        // Long click to view contact details
+        lvHasil.setOnItemLongClickListener { _, _, position, _ ->
+            val contact = contactList[position]
+            AlertDialog.Builder(this)
+                .setTitle(contact.nama)
+                .setMessage(
+                    "Nomor: ${contact.nomor}\n" +
+                            "Alamat: ${contact.alamat}\n" +
+                            "Email: ${contact.email}"
+                )
+                .setPositiveButton("OK", null)
+                .show()
+            true
         }
     }
 
-    private fun updateWordList(dbHelper: DatabaseHelper, keyword: String) {
-        wordList.clear()
-        val cursor = if (keyword.isEmpty()) dbHelper.getAllKata() else dbHelper.searchKata(keyword)
+    private fun updateContactList(dbHelper: DatabaseHelper, keyword: String) {
+        contactList.clear()
+        val cursor = if (keyword.isEmpty()) {
+            dbHelper.getAllContact()
+        } else {
+            dbHelper.searchContact(keyword)
+        }
+
         while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
-            val indonesia = cursor.getString(cursor.getColumnIndexOrThrow("indonesia"))
-            val english = cursor.getString(cursor.getColumnIndexOrThrow("english"))
-            wordList.add(Word(id, indonesia, english))
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ID))
+            val nama = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_NAMA))
+            val nomor = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_NOMOR))
+            val alamat = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_ALAMAT))
+            val email = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COL_EMAIL))
+            contactList.add(Contact(id, nama, nomor, alamat, email))
         }
         cursor.close()
-        wordAdapter.notifyDataSetChanged()
-        if (wordList.isEmpty() && keyword.isNotEmpty()) {
-            Toast.makeText(this, "Tidak ditemukan kata yang cocok", Toast.LENGTH_SHORT).show()
+        contactAdapter.notifyDataSetChanged()
+
+        if (contactList.isEmpty() && keyword.isNotEmpty()) {
+            Toast.makeText(this, "Tidak ditemukan kontak yang cocok", Toast.LENGTH_SHORT).show()
         }
     }
 }

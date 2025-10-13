@@ -7,39 +7,76 @@
     android:background="#F0F4F8"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/sym_action_call"
+        android:tint="#2196F3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="48dp" />
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Kontak"
-        android:textSize="24sp"
+        android:text="Buku Kontak"
+        android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#333333"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivLogo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kelola kontak Anda dengan mudah"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/btnAddData"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tambah Kontak"
+        android:layout_height="60dp"
+        android:text="➕ Tambah Kontak"
+        android:textSize="16sp"
         android:backgroundTint="#2196F3"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="48dp" />
 
     <Button
         android:id="@+id/btnViewData"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Lihat Kontak Tersimpan"
-        android:backgroundTint="#2196F3"
+        android:layout_height="60dp"
+        android:text="🔍 Lihat & Cari Kontak"
+        android:textSize="16sp"
+        android:backgroundTint="#4CAF50"
         android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/btnAddData"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="32dp" />
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvFooter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="© 2025 Ahmad Danu"
+        android:textSize="12sp"
+        android:textColor="#999999"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
